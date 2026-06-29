@@ -1,14 +1,13 @@
 const crypto = require('crypto');
-const { canonicalize } = require('./hash');
 
-function verifySignature(payload, signature, publicKey) {
-  const data = typeof payload === 'string' ? payload : canonicalize(payload);
-  return crypto.verify(
-    'sha256',
-    Buffer.from(data),
-    { key: publicKey, padding: crypto.constants.RSA_PKCS1_PADDING },
-    Buffer.from(signature, 'base64')
-  );
+function verifySignature(canonicalString, signatureBase64, publicKeyPem) {
+  try {
+    const verify = crypto.createVerify('RSA-SHA256');
+    verify.update(canonicalString);
+    return verify.verify(publicKeyPem, signatureBase64, 'base64');
+  } catch {
+    return false;
+  }
 }
 
 module.exports = { verifySignature };

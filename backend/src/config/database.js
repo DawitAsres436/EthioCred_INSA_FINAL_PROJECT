@@ -1,12 +1,25 @@
+require('./env');
+
 const { Pool } = require('pg');
-const env = require('./env');
 
 const pool = new Pool({
-  connectionString: env.databaseUrl,
+  connectionString: process.env.DATABASE_URL,
+});
+
+pool.on('connect', () => {
+  console.log('PostgreSQL connected successfully');
 });
 
 pool.on('error', (err) => {
-  console.error('Unexpected PostgreSQL pool error:', err);
+  console.error('PostgreSQL pool error:', err);
 });
 
-module.exports = { pool, query: (text, params) => pool.query(text, params) };
+async function query(text, params) {
+  return pool.query(text, params);
+}
+
+async function getClient() {
+  return pool.connect();
+}
+
+module.exports = { pool, query, getClient };

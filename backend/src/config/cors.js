@@ -1,7 +1,9 @@
-const cors = require('cors');
 const env = require('./env');
 
-module.exports = cors({
+const corsOptions = {
   origin: env.corsOrigins,
   credentials: true,
-});
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+};
+
+module.exports = corsOptions;

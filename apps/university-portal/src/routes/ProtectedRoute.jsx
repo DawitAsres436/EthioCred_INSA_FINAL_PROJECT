@@ -1,19 +1,30 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth.js';
+import Loader from '../components/Loader/Loader.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
-export default function ProtectedRoute({ children }) {
-  const { isAuthenticated, loading } = useAuth();
+function roleMatches(userRole, requiredRole) {
+  if (!requiredRole) return true;
+  if (Array.isArray(requiredRole)) return requiredRole.includes(userRole);
+  return userRole === requiredRole;
+}
 
-  if (loading) {
+export default function ProtectedRoute({ children, role }) {
+  const { isAuthenticated, isLoading, user } = useAuth();
+
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
+        <Loader />
       </div>
     );
   }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (!roleMatches(user?.role, role)) {
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return children;

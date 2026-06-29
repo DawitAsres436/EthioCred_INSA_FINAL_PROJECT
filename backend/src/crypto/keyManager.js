@@ -1,38 +1,75 @@
 const crypto = require('crypto');
-const env = require('../config/env');
+const { query } = require('../config/database');
+require('../config/env');
 
-function getMasterKey() {
-  const key = env.aesEncryptionKey;
+function getAesKey() {
+  const key = process.env.AES_ENCRYPTION_KEY;
   if (!key || key.length !== 32) {
     throw new Error('AES_ENCRYPTION_KEY must be exactly 32 characters');
   }
   return Buffer.from(key, 'utf8');
 }
 
+function generateRSAKeyPair() {
+  const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+    modulusLength: 2048,
+    publicKeyEncoding: { type: 'spki', format: 'pem' },
+    privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+  });
+  return { publicKey, privateKey };
+}
+
 function encryptPrivateKey(privateKeyPem) {
-  const iv = crypto.randomBytes(12);
-  const cipher = crypto.createCipheriv('aes-256-gcm', getMasterKey(), iv);
-  const encrypted = Buffer.concat([cipher.update(privateKeyPem, 'utf8'), cipher.final()]);
+  const key = getAesKey();
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+
+  let encrypted = cipher.update(privateKeyPem, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
   const authTag = cipher.getAuthTag();
-  return Buffer.concat([iv, authTag, encrypted]).toString('base64');
+
+  return JSON.stringify({
+    iv: iv.toString('hex'),
+    authTag: authTag.toString('hex'),
+    encryptedKey: encrypted,
+  });
 }
 
-function decryptPrivateKey(encryptedBase64) {
-  const data = Buffer.from(encryptedBase64, 'base64');
-  const iv = data.subarray(0, 12);
-  const authTag = data.subarray(12, 28);
-  const encrypted = data.subarray(28);
-  const decipher = crypto.createDecipheriv('aes-256-gcm', getMasterKey(), iv);
-  decipher.setAuthTag(authTag);
-  return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString('utf8');
+function decryptPrivateKey(encryptedJson) {
+  const { iv, authTag, encryptedKey } = JSON.parse(encryptedJson);
+  const key = getAesKey();
+  const decipher = crypto.createDecipheriv('aes-256-gcm', key, Buffer.from(iv, 'hex'));
+  decipher.setAuthTag(Buffer.from(authTag, 'hex'));
+
+  let decrypted = decipher.update(encryptedKey, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
 }
 
-function getPublicKeyFingerprint(publicKeyPem) {
+async function loadPrivateKey(institutionId) {
+  const result = await query(
+    `SELECT private_key_encrypted FROM institution_keys
+     WHERE institution_id = $1 AND status = 'ACTIVE'
+     ORDER BY key_version DESC
+     LIMIT 1`,
+    [institutionId]
+  );
+
+  if (result.rows.length === 0) {
+    throw new Error(`No active private key found for institution ${institutionId}`);
+  }
+
+  return decryptPrivateKey(result.rows[0].private_key_encrypted);
+}
+
+function generateKeyFingerprint(publicKeyPem) {
   return crypto.createHash('sha256').update(publicKeyPem).digest('hex');
 }
 
 module.exports = {
+  generateRSAKeyPair,
   encryptPrivateKey,
   decryptPrivateKey,
-  getPublicKeyFingerprint,
+  loadPrivateKey,
+  generateKeyFingerprint,
 };

@@ -1,8 +1,20 @@
 const app = require('./app');
-const env = require('./config/env');
+const { query } = require('./config/database');
+require('./config/env');
 
-const server = app.listen(env.port, () => {
-  console.log(`EthioCred API running on port ${env.port} [${env.nodeEnv}]`);
-});
+const PORT = parseInt(process.env.PORT, 10) || 5000;
 
-process.on('SIGTERM', () => server.close());
+async function start() {
+  try {
+    await query('SELECT 1');
+  } catch (err) {
+    console.error('Failed to connect to PostgreSQL:', err.message);
+    process.exit(1);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`EthioCred Backend running on port ${PORT}`);
+  });
+}
+
+start();

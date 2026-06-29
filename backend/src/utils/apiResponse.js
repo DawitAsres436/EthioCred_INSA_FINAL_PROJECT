@@ -1,15 +1,20 @@
-function success(res, message, data = null, statusCode = 200) {
-  const body = { success: true, message };
-  if (data !== null) body.data = data;
-  return res.status(statusCode).json(body);
+function success(res, data, message = 'Success', statusCode = 200) {
+  return res.status(statusCode).json({
+    success: true,
+    message,
+    data,
+  });
 }
 
-function error(res, message, code = 'INTERNAL_ERROR', statusCode = 500) {
-  return res.status(statusCode).json({
+function error(res, message = 'Error', statusCode = 400, errors = null) {
+  const body = {
     success: false,
     message,
-    error: { code },
-  });
+  };
+  if (errors !== null) {
+    body.errors = errors;
+  }
+  return res.status(statusCode).json(body);
 }
 
 module.exports = { success, error };
