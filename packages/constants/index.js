@@ -1,0 +1,20 @@
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  UNIVERSITY: 'UNIVERSITY',
+  STUDENT: 'STUDENT',
+  EMPLOYER: 'EMPLOYER',
+};
+
+export const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:5000/api/v1';
+
+export const CREDENTIAL_STATUS = {
+  ACTIVE: 'ACTIVE',
+  REVOKED: 'REVOKED',
+};
+
+export const VERIFICATION_REQUEST_STATUS = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  DENIED: 'DENIED',
+  COMPLETED: 'COMPLETED',
+};
