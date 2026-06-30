@@ -1,23 +1,23 @@
 export default function Table({ columns, data, onRowClick, emptyMessage = 'No records found.' }) {
   return (
-    <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
-      <table className="min-w-full divide-y divide-slate-200">
-        <thead className="bg-slate-50 text-slate-500">
-          <tr>
+    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr className="bg-gray-50">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em]"
+                className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500"
               >
                 {col.label}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-gray-100">
           {data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-10 text-center text-sm text-slate-500">
+              <td colSpan={columns.length} className="px-4 py-10 text-center text-sm text-gray-500">
                 {emptyMessage}
               </td>
             </tr>
@@ -26,12 +26,12 @@ export default function Table({ columns, data, onRowClick, emptyMessage = 'No re
               <tr
                 key={row.id || rowIndex}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
-                className={`transition-colors duration-150 ${
-                  rowIndex % 2 ? 'bg-slate-50' : 'bg-white'
-                } ${onRowClick ? 'hover:bg-slate-100 cursor-pointer' : ''}`}
+                className={`transition-colors duration-200 ${
+                  rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                } ${onRowClick ? 'cursor-pointer hover:bg-blue-50' : 'hover:bg-blue-50'}`}
               >
                 {columns.map((col) => (
-                  <td key={col.key} className="px-4 py-3 text-sm text-slate-700 whitespace-nowrap align-top">
+                  <td key={col.key} className="whitespace-nowrap px-4 py-3 text-sm text-gray-700 align-top">
                     {col.render ? col.render(row) : row[col.key]}
                   </td>
                 ))}

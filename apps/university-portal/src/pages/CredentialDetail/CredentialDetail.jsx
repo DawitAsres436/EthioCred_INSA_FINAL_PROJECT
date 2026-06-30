@@ -145,7 +145,7 @@ export default function CredentialDetail() {
         <button
           type="button"
           onClick={() => setShowRevokeModal(true)}
-          className="inline-flex items-center justify-center rounded-2xl bg-rose-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-rose-500/10 transition hover:bg-rose-700"
+          className="inline-flex items-center justify-center rounded-lg bg-red-600 px-6 py-2 font-medium text-white transition-all duration-200 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Revoke This Credential
         </button>
@@ -168,7 +168,7 @@ export default function CredentialDetail() {
           value={reason}
           onChange={(e) => setReason(e.target.value)}
           rows={4}
-          className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-rose-500 focus:ring-2 focus:ring-rose-200"
+          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           placeholder="Revocation reason (required)"
           required
         />

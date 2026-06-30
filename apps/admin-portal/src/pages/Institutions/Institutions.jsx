@@ -17,6 +17,21 @@ function statusBadge(status) {
   return <Badge variant={map[status] || 'gray'}>{status}</Badge>;
 }
 
+const inputClass =
+  'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+
+const btnPrimary =
+  'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50';
+
+const btnSecondary =
+  'rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500';
+
+const btnDestructive =
+  'rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white transition-all duration-200 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50';
+
+const btnPrimarySm =
+  'inline-flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500';
+
 function OverlayModal({ title, onClose, children, hideClose = false }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -167,7 +182,7 @@ export default function Institutions() {
             <button
               type="button"
               onClick={() => handleApprove(row.id)}
-              className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
+              className={btnPrimarySm}
             >
               Approve
             </button>
@@ -177,7 +192,7 @@ export default function Institutions() {
               <button
                 type="button"
                 onClick={() => handleSuspend(row)}
-                className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700"
+                className={btnDestructive}
               >
                 Suspend
               </button>
@@ -189,7 +204,7 @@ export default function Institutions() {
                   setRegistrarResult(null);
                   setRegistrarForm({ full_name: '', email: '' });
                 }}
-                className="inline-flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
+                className={btnPrimarySm}
               >
                 <UserPlus size={12} />
                 Add Registrar
@@ -211,13 +226,13 @@ export default function Institutions() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="flex items-center gap-2 text-2xl font-semibold text-slate-900">
-            <Building2 size={24} />
+          <h2 className="flex items-center gap-2 text-2xl font-semibold text-gray-900">
+            <Building2 size={24} className="text-blue-700" />
             Institutions
           </h2>
-          <p className="mt-1 text-sm text-slate-500">Manage trust registry and registrar accounts.</p>
+          <p className="mt-1 text-sm text-gray-500">Manage trust registry and registrar accounts.</p>
         </div>
         <button
           type="button"
@@ -226,7 +241,7 @@ export default function Institutions() {
             setRegisterResult(null);
             setRegisterForm({ name: '', organization_fayda_id: '', registration_number: '' });
           }}
-          className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+          className={`inline-flex items-center gap-2 ${btnPrimary} px-4 py-2.5`}
         >
           <Plus size={16} />
           Register New Institution
@@ -250,38 +265,38 @@ export default function Institutions() {
           {!registerResult ? (
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700">Institution Name</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Institution Name</label>
                 <input
                   required
                   value={registerForm.name}
                   onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className={inputClass}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700">Organization Fayda ID</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Organization Fayda ID</label>
                 <input
                   value={registerForm.organization_fayda_id}
                   onChange={(e) => setRegisterForm({ ...registerForm, organization_fayda_id: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className={inputClass}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700">Registration Number</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Registration Number</label>
                 <input
                   value={registerForm.registration_number}
                   onChange={(e) => setRegisterForm({ ...registerForm, registration_number: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className={inputClass}
                 />
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={closeRegisterModal} className="rounded-lg bg-gray-100 px-4 py-2 text-sm">
+                <button type="button" onClick={closeRegisterModal} className={btnSecondary}>
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={registerSubmitting}
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                  className={btnPrimary}
                 >
                   {registerSubmitting ? 'Registering…' : 'Register'}
                 </button>
@@ -313,7 +328,7 @@ export default function Institutions() {
               <button
                 type="button"
                 onClick={closeRegisterModal}
-                className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
+                className={`w-full ${btnPrimary}`}
               >
                 Done
               </button>
@@ -331,32 +346,32 @@ export default function Institutions() {
           {!registrarResult ? (
             <form onSubmit={handleCreateRegistrar} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700">Full Name</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Full Name</label>
                 <input
                   required
                   value={registrarForm.full_name}
                   onChange={(e) => setRegistrarForm({ ...registrarForm, full_name: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className={inputClass}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700">Email</label>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
                 <input
                   required
                   type="email"
                   value={registrarForm.email}
                   onChange={(e) => setRegistrarForm({ ...registrarForm, email: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  className={inputClass}
                 />
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={closeRegistrarModal} className="rounded-lg bg-gray-100 px-4 py-2 text-sm">
+                <button type="button" onClick={closeRegistrarModal} className={btnSecondary}>
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={registrarSubmitting}
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                  className={btnPrimary}
                 >
                   {registrarSubmitting ? 'Creating…' : 'Create Registrar'}
                 </button>
@@ -392,7 +407,7 @@ export default function Institutions() {
               <button
                 type="button"
                 onClick={closeRegistrarModal}
-                className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
+                className={`w-full ${btnPrimary}`}
               >
                 Done, I&apos;ve saved the password
               </button>

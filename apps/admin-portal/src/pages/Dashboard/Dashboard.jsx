@@ -45,9 +45,9 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-[2rem] bg-white p-6 shadow-sm border border-slate-200">
-        <h2 className="text-2xl font-semibold text-slate-900">Admin Dashboard</h2>
-        <p className="mt-1 text-sm text-slate-500">
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-900">Admin Dashboard</h2>
+        <p className="mt-1 text-sm text-gray-500">
           Platform overview — institutions, users, and pending approvals.
         </p>
       </div>
@@ -68,43 +68,43 @@ export default function Dashboard() {
           </div>
           <Link
             to="/institutions"
-            className="inline-flex items-center justify-center rounded-xl bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
+            className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Review Institutions
           </Link>
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {[
-          { label: 'Total Institutions', value: counts.total, color: 'text-sky-600' },
-          { label: 'Active Institutions', value: counts.active, color: 'text-emerald-600' },
-          { label: 'Pending Institutions', value: counts.pending, color: 'text-amber-600' },
+          { label: 'Total Institutions', value: counts.total },
+          { label: 'Active Institutions', value: counts.active },
+          { label: 'Pending Institutions', value: counts.pending },
         ].map((stat) => (
           <div
             key={stat.label}
-            className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+            className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
           >
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">{stat.label}</p>
-            <p className={`mt-3 text-3xl font-semibold ${stat.color}`}>{stat.value}</p>
+            <p className="text-sm font-medium text-gray-500">{stat.label}</p>
+            <p className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</p>
           </div>
         ))}
       </div>
 
       {stats && (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
-            { label: 'Total Users', value: stats.users, color: 'text-violet-600' },
-            { label: 'Credentials', value: stats.credentials, color: 'text-indigo-600' },
-            { label: 'Verifications', value: stats.verifications, color: 'text-blue-600' },
-            { label: 'Institutions (DB)', value: stats.institutions, color: 'text-slate-600' },
+            { label: 'Total Users', value: stats.users },
+            { label: 'Credentials', value: stats.credentials },
+            { label: 'Verifications', value: stats.verifications },
+            { label: 'Institutions (DB)', value: stats.institutions },
           ].map((stat) => (
             <div
               key={stat.label}
-              className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm"
+              className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
             >
-              <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">{stat.label}</p>
-              <p className={`mt-3 text-2xl font-semibold ${stat.color}`}>{stat.value}</p>
+              <p className="text-sm font-medium text-gray-500">{stat.label}</p>
+              <p className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</p>
             </div>
           ))}
         </div>

@@ -76,11 +76,11 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-[2rem] bg-white p-6 shadow-sm border border-slate-200">
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-2xl font-semibold text-slate-900">Dashboard</h2>
-            <p className="mt-1 text-sm text-slate-500">Overview of issued credentials and recent activity.</p>
+            <h2 className="text-2xl font-semibold text-gray-900">Dashboard</h2>
+            <p className="mt-1 text-sm text-gray-500">Overview of issued credentials and recent activity.</p>
           </div>
         </div>
       </div>
@@ -91,16 +91,19 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: 'Total Issued', value: stats.total, color: 'text-sky-600' },
-          { label: 'Active Credentials', value: stats.active, color: 'text-emerald-600' },
-          { label: 'Revoked Credentials', value: stats.revoked, color: 'text-rose-600' },
-          { label: 'Batches This Month', value: stats.batchesThisMonth, color: 'text-violet-600' },
+          { label: 'Total Issued', value: stats.total },
+          { label: 'Active Credentials', value: stats.active },
+          { label: 'Revoked Credentials', value: stats.revoked },
+          { label: 'Batches This Month', value: stats.batchesThisMonth },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">{stat.label}</p>
-            <p className={`mt-3 text-3xl font-semibold ${stat.color}`}>{stat.value}</p>
+          <div
+            key={stat.label}
+            className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <p className="text-sm font-medium text-gray-500">{stat.label}</p>
+            <p className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</p>
           </div>
         ))}
       </div>

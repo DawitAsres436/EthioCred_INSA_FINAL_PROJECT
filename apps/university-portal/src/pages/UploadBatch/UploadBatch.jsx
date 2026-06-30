@@ -131,7 +131,7 @@ export default function UploadBatch() {
           type="button"
           onClick={handleUpload}
           disabled={uploading}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/10 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {uploading ? (
             <>
@@ -175,7 +175,7 @@ export default function UploadBatch() {
             <button
               type="button"
               onClick={handleProceed}
-              className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/10 transition hover:bg-emerald-700"
+              className="inline-flex items-center justify-center rounded-lg bg-green-600 px-6 py-2 font-medium text-white transition-all duration-200 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Proceed to Issue
             </button>

@@ -26,22 +26,24 @@ export default function Login() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-700">University Portal</p>
-        <h2 className="mt-4 text-3xl font-semibold text-slate-900">Sign in to EthioCred</h2>
-        <p className="mt-2 text-sm text-slate-500">Access secure credential issuance, verification, and administration.</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-blue-700">University Portal</p>
+        <h2 className="mt-3 text-2xl font-bold text-gray-900">Sign in to EthioCred</h2>
+        <p className="mt-2 text-sm text-gray-500">
+          Access secure credential issuance, verification, and administration.
+        </p>
       </div>
 
       {error && (
-        <div className="rounded-3xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 shadow-sm">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="space-y-3">
-          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+        <div>
+          <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
             Email address
           </label>
           <input
@@ -49,22 +51,22 @@ export default function Login() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
             autoComplete="username"
             placeholder="you@example.com"
           />
         </div>
 
-        <div className="space-y-3">
-          <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+        <div>
+          <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
             Password
           </label>
           <PasswordInput
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
             autoComplete="current-password"
             placeholder="Enter your password"
@@ -74,7 +76,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/10 transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+          className="w-full rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? 'Signing in...' : 'Sign In'}
         </button>
