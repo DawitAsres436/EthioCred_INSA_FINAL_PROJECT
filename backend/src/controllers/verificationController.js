@@ -3,7 +3,10 @@ const verificationRepository = require('../repositories/verificationRepository')
 const { success, error } = require('../utils/apiResponse');
 
 async function directVerify(req, res) {
-  const result = await verificationService.completeVerification(req.params.credentialId);
+  const result = await verificationService.completeVerification(
+    req.params.credentialId,
+    req.user.id
+  );
   return success(res, result, result.valid ? 'Credential verified' : 'Verification failed');
 }
 
@@ -75,6 +78,11 @@ async function getEmployerHistory(req, res) {
   return success(res, history, 'Verification history retrieved successfully');
 }
 
+async function getMyApprovedCredentials(req, res) {
+  const credentials = await verificationRepository.findApprovedCredentialsForEmployer(req.user.id);
+  return success(res, credentials, 'Approved credentials retrieved successfully');
+}
+
 async function getRequestById(req, res) {
   const request = await verificationRepository.findById(req.params.requestId);
 
@@ -93,5 +101,6 @@ module.exports = {
   approveRequest,
   denyRequest,
   getEmployerHistory,
+  getMyApprovedCredentials,
   getRequestById,
 };

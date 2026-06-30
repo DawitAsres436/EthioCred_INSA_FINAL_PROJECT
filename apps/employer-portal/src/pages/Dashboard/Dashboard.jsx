@@ -85,7 +85,8 @@ export default function Dashboard() {
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Verifications</h3>
         {recentResults.length === 0 ? (
           <p className="text-gray-500 text-sm">
-            No verifications run yet. Go to Verify Credential to run your first check.
+            No verifications run yet. Go to Verify Credential to view and verify credentials
+            you&apos;ve been approved to access.
           </p>
         ) : (
           <Table columns={columns} data={recentResults} />

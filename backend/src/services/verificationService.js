@@ -26,6 +26,7 @@ function mapReasonToLogResult(reason) {
   const mapping = {
     VERIFIED: 'VALID',
     CREDENTIAL_NOT_FOUND: 'NOT_FOUND',
+    CONSENT_REQUIRED: 'UNTRUSTED',
     UNTRUSTED_INSTITUTION: 'UNTRUSTED',
     NO_PUBLIC_KEY: 'UNTRUSTED',
     INTEGRITY_VIOLATION: 'INTEGRITY_VIOLATION',
@@ -48,7 +49,23 @@ function buildCanonicalObject(credential) {
   };
 }
 
-async function verifyCredential(credentialId) {
+async function verifyCredential(credentialId, employerId = null) {
+  if (employerId) {
+    const approvedRequest = await verificationRepository.findApprovedRequest(
+      credentialId,
+      employerId
+    );
+    if (!approvedRequest) {
+      return {
+        valid: false,
+        reason: 'CONSENT_REQUIRED',
+        step: 0,
+        message:
+          'You must request verification access and have the student approve it before you can verify this credential.',
+      };
+    }
+  }
+
   const credential = await credentialRepository.findWithDetails(credentialId);
 
   if (!credential) {
@@ -211,8 +228,8 @@ async function denyRequest(requestId, studentId) {
   return updated;
 }
 
-async function completeVerification(credentialId, requestId = null) {
-  const result = await verifyCredential(credentialId);
+async function completeVerification(credentialId, employerId = null, requestId = null) {
+  const result = await verifyCredential(credentialId, employerId);
 
   await verificationRepository.createLog({
     requestId,

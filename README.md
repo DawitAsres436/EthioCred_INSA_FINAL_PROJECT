@@ -49,3 +49,12 @@ Login as Admin at the Admin Portal, then open **Security Demo** at http://localh
 - University Portal: 5174
 - Employer Portal: 5175
 - Admin Portal: 5176
+
+## Core Workflow
+
+### Verify a Credential (Employer)
+
+1. Employer goes to **Request Verification**, enters a credential ID, and sends the request.
+2. Student approves the request in their wallet.
+3. Employer goes to **Verify Credential** — the approved credential now appears in their list.
+4. Employer clicks **Verify This Credential** — the result shows VERIFIED with full details.

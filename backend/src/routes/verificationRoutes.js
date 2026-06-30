@@ -54,6 +54,13 @@ router.get(
   verificationController.getEmployerHistory
 );
 
+router.get(
+  '/approved',
+  authenticate,
+  authorize('EMPLOYER'),
+  verificationController.getMyApprovedCredentials
+);
+
 router.get('/requests/:requestId', authenticate, verificationController.getRequestById);
 
 module.exports = router;

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { get, post, formatDate, formatDateTime } from '@ethiocred/utils';
 import Loader from '../../components/Loader/Loader.jsx';
 import { saveVerificationResult } from '../../utils/verificationCache.js';
 
 const FAILURE_MESSAGES = {
+  CONSENT_REQUIRED:
+    'You do not have approved access to verify this credential. Please request access first.',
   CREDENTIAL_NOT_FOUND: 'Credential does not exist in the system',
   UNTRUSTED_INSTITUTION: 'Issuing institution is not in the Trust Registry',
   NO_PUBLIC_KEY: 'Issuing institution is not in the Trust Registry',
@@ -14,96 +16,58 @@ const FAILURE_MESSAGES = {
   CREDENTIAL_REVOKED: 'This credential has been revoked by the institution',
 };
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 export default function VerifyCredential() {
-  const location = useLocation();
-  const [searchInput, setSearchInput] = useState('');
-  const [preview, setPreview] = useState(null);
+  const [approvedCredentials, setApprovedCredentials] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [result, setResult] = useState(null);
-  const [searching, setSearching] = useState(false);
-  const [verifying, setVerifying] = useState(false);
+  const [verifyingId, setVerifyingId] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (location.state?.credentialId) {
-      setSearchInput(location.state.credentialId);
-    }
-  }, [location.state]);
+    get('/verification/approved')
+      .then(({ data }) => setApprovedCredentials(data.data || []))
+      .catch((err) =>
+        setError(err.response?.data?.message || err.message || 'Failed to load approved credentials')
+      )
+      .finally(() => setLoading(false));
+  }, []);
 
-  const handleSearch = async () => {
-    if (!searchInput.trim()) return;
-    setSearching(true);
-    setError('');
-    setPreview(null);
-    setResult(null);
-
-    try {
-      if (!UUID_REGEX.test(searchInput.trim())) {
-        const histRes = await get('/verification/history');
-        const hist = histRes.data.data || [];
-        const match = hist.find(
-          (h) => h.serial_number?.toLowerCase() === searchInput.trim().toLowerCase()
-        );
-        if (match?.credential_id) {
-          const { data } = await get(`/credentials/${match.credential_id}`);
-          setPreview(data.data);
-          return;
-        }
-      }
-      const { data } = await get(`/credentials/${searchInput.trim()}`);
-      setPreview(data.data);
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Credential not found');
-    } finally {
-      setSearching(false);
-    }
-  };
-
-  const handleVerify = async () => {
-    if (!preview?.id) return;
-    setVerifying(true);
+  const handleVerify = async (credential) => {
+    setVerifyingId(credential.credential_id);
     setError('');
     setResult(null);
 
     try {
-      const { data } = await post(`/verification/verify/${preview.id}`);
+      const { data } = await post(`/verification/verify/${credential.credential_id}`);
       const verificationResult = data.data;
       setResult(verificationResult);
-      saveVerificationResult(verificationResult, preview);
+      saveVerificationResult(verificationResult, {
+        id: credential.credential_id,
+        serial_number: credential.serial_number,
+        holder_name: credential.holder_name,
+        institution_name: credential.institution_name,
+        degree_name: credential.degree_name,
+        major: credential.major,
+        graduation_year: credential.graduation_year,
+      });
     } catch (err) {
       setError(err.response?.data?.message || 'Verification failed');
     } finally {
-      setVerifying(false);
+      setVerifyingId(null);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Verify Credential</h2>
-
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Enter Credential ID or Serial Number
-        </label>
-        <div className="flex gap-3">
-          <input
-            type="text"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="UUID or CRED-..."
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="button"
-            onClick={handleSearch}
-            disabled={searching}
-            className="px-5 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 disabled:opacity-50 font-medium"
-          >
-            {searching ? 'Searching...' : 'Search'}
-          </button>
-        </div>
-      </div>
 
       {error && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
@@ -111,25 +75,55 @@ export default function VerifyCredential() {
         </div>
       )}
 
-      {preview && !result && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Credential Preview</h3>
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm mb-6">
-            <div><dt className="text-gray-500">Serial</dt><dd className="font-medium">{preview.serial_number}</dd></div>
-            <div><dt className="text-gray-500">Holder</dt><dd className="font-medium">{preview.holder_name}</dd></div>
-            <div><dt className="text-gray-500">Degree</dt><dd className="font-medium">{preview.degree_name}</dd></div>
-            <div><dt className="text-gray-500">Institution</dt><dd className="font-medium">{preview.institution_name}</dd></div>
-            <div><dt className="text-gray-500">Status</dt><dd className="font-medium">{preview.status}</dd></div>
-          </dl>
-          <button
-            type="button"
-            onClick={handleVerify}
-            disabled={verifying}
-            className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
+      {approvedCredentials.length === 0 ? (
+        <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm text-center">
+          <p className="text-gray-600 mb-4">
+            You don&apos;t have access to verify any credentials yet. Go to Request Verification to
+            ask a student for access.
+          </p>
+          <Link
+            to="/request"
+            className="inline-flex px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
           >
-            {verifying ? <Loader /> : null}
-            {verifying ? 'Verifying...' : 'Run Verification'}
-          </button>
+            Request Verification
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-4 mb-6">
+          {approvedCredentials.map((credential) => (
+            <div
+              key={credential.request_id}
+              className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                <p>
+                  <span className="text-gray-500">Student:</span>{' '}
+                  <strong>{credential.holder_name}</strong>
+                </p>
+                <p>
+                  <span className="text-gray-500">Degree:</span>{' '}
+                  <strong>{credential.degree_name}</strong>
+                </p>
+                <p>
+                  <span className="text-gray-500">Institution:</span>{' '}
+                  <strong>{credential.institution_name}</strong>
+                </p>
+                <p>
+                  <span className="text-gray-500">Graduation Year:</span>{' '}
+                  <strong>{credential.graduation_year}</strong>
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleVerify(credential)}
+                disabled={verifyingId === credential.credential_id}
+                className="shrink-0 flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
+              >
+                {verifyingId === credential.credential_id ? <Loader /> : null}
+                {verifyingId === credential.credential_id ? 'Verifying...' : 'Verify This Credential'}
+              </button>
+            </div>
+          ))}
         </div>
       )}
 
@@ -155,7 +149,7 @@ export default function VerifyCredential() {
               >
                 {result.valid ? 'CREDENTIAL VERIFIED' : 'VERIFICATION FAILED'}
               </h3>
-              {!result.valid && result.step && (
+              {!result.valid && result.step != null && (
                 <p className="text-sm text-red-600 mt-1">Failed at step {result.step}</p>
               )}
             </div>
@@ -174,7 +168,7 @@ export default function VerifyCredential() {
             </div>
           ) : (
             <p className="text-red-800 font-medium text-lg">
-              {FAILURE_MESSAGES[result.reason] || result.reason}
+              {FAILURE_MESSAGES[result.reason] || result.message || result.reason}
             </p>
           )}
         </div>

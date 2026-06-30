@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { UserPlus } from 'lucide-react';
 import { post } from '../../services/api.js';
+import PasswordInput from '../../components/PasswordInput/PasswordInput.jsx';
 
 export default function CreateAdmin() {
   const [form, setForm] = useState({ full_name: '', email: '', password: '' });
@@ -67,9 +68,8 @@ export default function CreateAdmin() {
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700">Password</label>
-          <input
+          <PasswordInput
             required
-            type="password"
             minLength={8}
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
