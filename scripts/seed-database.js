@@ -1,4 +1,5 @@
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+// Change '..' to '..', 'backend', '.env' so it dives into the backend directory
+require('dotenv').config({ path: require('path').join(__dirname, '..', 'backend', '.env') });
 const fs = require('fs');
 const path = require('path');
 const { Client } = require('pg');

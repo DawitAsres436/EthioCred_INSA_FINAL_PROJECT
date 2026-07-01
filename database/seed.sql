@@ -12,7 +12,8 @@ VALUES (
     'ADMIN',
     'ACTIVE'
 )
-ON CONFLICT (email) DO NOTHING;
+ON CONFLICT (email) DO UPDATE 
+SET password_hash = EXCLUDED.password_hash;
 
 -- Institution: Addis Ababa University
 INSERT INTO institutions (id, name, organization_fayda_id, registration_number, status, approved_by, approved_at)
@@ -38,7 +39,8 @@ VALUES (
     'b0000000-0000-4000-8000-000000000001',
     'ACTIVE'
 )
-ON CONFLICT (email) DO NOTHING;
+ON CONFLICT (email) DO UPDATE 
+SET password_hash = EXCLUDED.password_hash;
 
 -- Student user
 INSERT INTO users (id, full_name, email, password_hash, fayda_id, role, status)
@@ -51,7 +53,8 @@ VALUES (
     'STUDENT',
     'ACTIVE'
 )
-ON CONFLICT (email) DO NOTHING;
+ON CONFLICT (email) DO UPDATE 
+SET password_hash = EXCLUDED.password_hash;
 
 -- Employer user
 INSERT INTO users (id, full_name, email, password_hash, role, status)
@@ -63,4 +66,5 @@ VALUES (
     'EMPLOYER',
     'ACTIVE'
 )
-ON CONFLICT (email) DO NOTHING;
+ON CONFLICT (email) DO UPDATE
+SET password_hash = EXCLUDED.password_hash;
