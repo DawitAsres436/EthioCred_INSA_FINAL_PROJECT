@@ -39,15 +39,18 @@ export default function History() {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">Verification History</h2>
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-900">Verification History</h2>
+          <p className="mt-1 text-sm text-gray-500">Review past verification results from this browser.</p>
+        </div>
         <div className="flex gap-2">
           {['all', 'valid', 'invalid'].map((f) => (
             <button
               key={f}
               type="button"
               onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 text-sm rounded-lg capitalize ${
+              className={`rounded-lg px-3 py-1.5 text-sm font-medium capitalize transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 filter === f
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -60,7 +63,11 @@ export default function History() {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-gray-500">No verification history yet. Run a verification to see results here.</p>
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <p className="text-sm text-gray-500">
+            No verification history yet. Run a verification to see results here.
+          </p>
+        </div>
       ) : (
         <Table
           columns={columns}
@@ -85,7 +92,7 @@ export default function History() {
             {selected.step && <p><strong>Failed Step:</strong> {selected.step}</p>}
             <p><strong>Verified At:</strong> {formatDateTime(selected.verifiedAt)}</p>
             {selected.credential && (
-              <div className="mt-3 pt-3 border-t border-gray-200">
+              <div className="mt-3 border-t border-gray-200 pt-3">
                 <p><strong>Degree:</strong> {selected.credential.degree_name}</p>
                 <p><strong>GPA:</strong> {selected.credential.gpa}</p>
               </div>

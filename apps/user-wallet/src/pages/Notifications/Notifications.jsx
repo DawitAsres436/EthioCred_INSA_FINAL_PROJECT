@@ -54,14 +54,21 @@ export default function Notifications() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">Notifications</h2>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-900">Notifications</h2>
+          {unreadCount > 0 && (
+            <p className="mt-1 text-sm text-gray-500">
+              {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
         {unreadCount > 0 && (
           <button
             type="button"
             onClick={handleMarkAllRead}
             disabled={markingAll}
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium disabled:opacity-50"
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-blue-600 transition-colors hover:border-blue-200 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {markingAll ? 'Marking...' : 'Mark All Read'}
           </button>
@@ -69,30 +76,34 @@ export default function Notifications() {
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {error}
         </div>
       )}
 
       {notifications.length === 0 ? (
-        <p className="text-gray-500">No notifications yet.</p>
+        <p className="text-sm text-gray-500">No notifications yet.</p>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {notifications.map((notification) => (
             <button
               key={notification.id}
               type="button"
               onClick={() => !notification.is_read && handleMarkRead(notification.id)}
-              className={`w-full text-left p-4 rounded-lg border transition-colors ${
+              className={`w-full rounded-lg border border-gray-200 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 notification.is_read
-                  ? 'bg-white border-gray-200'
-                  : 'bg-blue-50 border-l-4 border-l-blue-500 border-gray-200 font-semibold'
+                  ? 'border-l-4 border-l-transparent bg-white p-5'
+                  : 'border-l-4 border-l-blue-500 bg-blue-50/50 p-5 shadow-sm'
               }`}
             >
-              <p className={`text-sm ${notification.is_read ? 'text-gray-700 font-normal' : 'text-gray-900'}`}>
+              <p
+                className={`text-sm leading-relaxed ${
+                  notification.is_read ? 'font-normal text-gray-700' : 'font-semibold text-gray-900'
+                }`}
+              >
                 {notification.message}
               </p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="mt-2 text-xs text-gray-400">
                 {timeAgo(notification.created_at)} · {formatDateTime(notification.created_at)}
               </p>
             </button>

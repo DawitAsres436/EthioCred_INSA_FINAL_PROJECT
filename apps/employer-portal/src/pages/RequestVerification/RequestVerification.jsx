@@ -29,41 +29,47 @@ export default function RequestVerification() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Request Verification</h2>
+      <h2 className="mb-2 text-2xl font-semibold text-gray-900">Request Verification</h2>
+      <p className="mb-6 text-sm text-gray-500">
+        Submit a verification request to the credential holder.
+      </p>
 
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-lg">
-        <p className="text-sm text-gray-600 mb-4">
+      <div className="max-w-lg rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <p className="mb-6 text-sm leading-relaxed text-gray-600">
           Submit a verification request to the credential holder. The student must approve before you can verify.
         </p>
 
         {success && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg">
+          <div className="mb-4 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700">
             Request sent — awaiting student approval. Redirecting...
           </div>
         )}
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
+          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Credential ID</label>
+            <label htmlFor="credentialId" className="mb-1 block text-sm font-medium text-gray-700">
+              Credential ID
+            </label>
             <input
+              id="credentialId"
               type="text"
               value={credentialId}
               onChange={(e) => setCredentialId(e.target.value)}
               placeholder="Enter credential UUID"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
           <button
             type="submit"
             disabled={loading || success}
-            className="w-full py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
+            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? 'Sending...' : 'Send Request'}
           </button>

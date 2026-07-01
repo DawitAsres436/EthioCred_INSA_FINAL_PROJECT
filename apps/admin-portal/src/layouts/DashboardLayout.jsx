@@ -5,6 +5,7 @@ import {
   Building2,
   UserPlus,
   Shield,
+  ScrollText,
   LogOut,
   Menu,
   X,
@@ -15,6 +16,7 @@ import logo from '../assets/logo.png';
 const navLinks = [
   { to: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
   { to: '/institutions', label: 'Institutions', Icon: Building2 },
+  { to: '/audit-logs', label: 'Audit Logs', Icon: ScrollText },
   { to: '/create-admin', label: 'Create Admin', Icon: UserPlus },
   { to: '/security-demo', label: 'Security Demo', Icon: Shield },
 ];

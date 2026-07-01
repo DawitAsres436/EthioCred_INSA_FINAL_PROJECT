@@ -1,10 +1,12 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import AuthLayout from '../layouts/AuthLayout.jsx';
 import DashboardLayout from '../layouts/DashboardLayout.jsx';
 import Loader from '../components/Loader/Loader.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
+import Landing from '../pages/Landing/Landing.jsx';
 import Login from '../pages/Login/Login.jsx';
+import Register from '../pages/Login/Register.jsx';
 import Unauthorized from '../pages/Unauthorized.jsx';
 import Dashboard from '../pages/Dashboard/Dashboard.jsx';
 import VerifyCredential from '../pages/VerifyCredential/VerifyCredential.jsx';
@@ -12,7 +14,7 @@ import RequestVerification from '../pages/RequestVerification/RequestVerificatio
 import History from '../pages/History/History.jsx';
 import RequestStatus from '../pages/RequestStatus/RequestStatus.jsx';
 
-function RootRedirect() {
+function LandingRoute() {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
@@ -23,18 +25,35 @@ function RootRedirect() {
     );
   }
 
-  return <Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />;
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Landing />;
+}
+
+function RegisterPage() {
+  const navigate = useNavigate();
+  return <Register onBack={() => navigate('/login')} />;
 }
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<RootRedirect />} />
+      <Route path="/" element={<LandingRoute />} />
       <Route
         path="/login"
         element={
           <AuthLayout>
             <Login />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <AuthLayout>
+            <RegisterPage />
           </AuthLayout>
         }
       />

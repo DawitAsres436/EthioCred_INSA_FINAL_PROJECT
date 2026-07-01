@@ -54,38 +54,41 @@ export default function Dashboard() {
   return (
     <div>
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-white mb-8 shadow-md">
+      <div className="mb-8 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white shadow-md">
         <h2 className="text-2xl font-semibold">Welcome, {profile?.full_name || user?.full_name}!</h2>
-        <p className="text-blue-100 mt-1">
+        <p className="mt-1 text-blue-100">
           Fayda ID: <span className="font-mono font-medium text-white">{profile?.fayda_id || '—'}</span>
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Total Credentials</p>
-          <p className="text-3xl font-bold text-blue-600 mt-1">{credentials.length}</p>
+          <p className="mt-1 text-3xl font-bold text-blue-600">{credentials.length}</p>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Pending Verification Requests</p>
-          <p className="text-3xl font-bold text-yellow-600 mt-1">{pendingRequests.length}</p>
+          <p className="mt-1 text-3xl font-bold text-indigo-600">{pendingRequests.length}</p>
         </div>
       </div>
 
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">Recent Credentials</h3>
-          <Link to="/credentials" className="text-sm text-blue-600 hover:underline">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-gray-900">Recent Credentials</h3>
+          <Link
+            to="/credentials"
+            className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 focus:outline-none focus:underline"
+          >
             View all
           </Link>
         </div>
         {recentCredentials.length === 0 ? (
-          <p className="text-gray-500 text-sm">No credentials in your wallet yet.</p>
+          <p className="text-sm text-gray-500">No credentials in your wallet yet.</p>
         ) : (
           <div className="space-y-3">
             {recentCredentials.map((cred) => (
@@ -93,16 +96,16 @@ export default function Dashboard() {
                 key={cred.id}
                 type="button"
                 onClick={() => navigate(`/credentials/${cred.id}`)}
-                className="w-full text-left bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all"
+                className="w-full rounded-xl border border-gray-200 bg-white p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-4">
                   <div>
-                    <p className="font-medium text-gray-800">{cred.degree_name}</p>
+                    <p className="font-semibold text-gray-900">{cred.degree_name}</p>
                     <p className="text-sm text-gray-500">{cred.institution_name}</p>
                   </div>
                   <div className="text-right">
                     {statusBadge(cred.status)}
-                    <p className="text-xs text-gray-400 mt-1">{formatDate(cred.issue_date)}</p>
+                    <p className="mt-1 text-xs text-gray-400">{formatDate(cred.issue_date)}</p>
                   </div>
                 </div>
               </button>

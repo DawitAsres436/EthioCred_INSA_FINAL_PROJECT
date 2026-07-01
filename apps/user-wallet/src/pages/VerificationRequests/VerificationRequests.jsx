@@ -69,21 +69,21 @@ export default function VerificationRequests() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Verification Requests</h2>
+      <h2 className="mb-6 text-2xl font-semibold text-gray-900">Verification Requests</h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      <div className="flex border-b border-gray-200 mb-6">
+      <div className="mb-6 flex border-b border-gray-200">
         {['pending', 'history'].map((tab) => (
           <button
             key={tab}
             type="button"
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 capitalize transition-colors ${
+            className={`border-b-2 px-4 py-2.5 text-sm font-medium capitalize transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               activeTab === tab
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -97,27 +97,30 @@ export default function VerificationRequests() {
       {activeTab === 'pending' && (
         <div className="space-y-4">
           {pending.length === 0 ? (
-            <p className="text-gray-500 text-sm">No pending verification requests.</p>
+            <p className="text-sm text-gray-500">No pending verification requests.</p>
           ) : (
             pending.map((req) => (
-              <div key={req.id} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
-                    <p className="font-semibold text-gray-800">{req.employer_name}</p>
-                    <p className="text-sm text-gray-600 mt-1">
+              <div
+                key={req.id}
+                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="space-y-1">
+                    <p className="text-base font-semibold text-gray-900">{req.employer_name}</p>
+                    <p className="text-sm text-gray-600">
                       {req.degree_name} — {req.serial_number}
                     </p>
-                    <p className="text-xs text-gray-400 mt-2">
+                    <p className="text-xs text-gray-400">
                       Requested: {formatDateTime(req.requested_at)}
                       {req.expires_at && ` · Expires: ${formatDate(req.expires_at)}`}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 gap-2">
                     <button
                       type="button"
                       onClick={() => handleApprove(req.id)}
                       disabled={actionId === req.id}
-                      className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 disabled:opacity-50"
+                      className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Approve
                     </button>
@@ -125,7 +128,7 @@ export default function VerificationRequests() {
                       type="button"
                       onClick={() => handleDeny(req.id)}
                       disabled={actionId === req.id}
-                      className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 disabled:opacity-50"
+                      className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Deny
                     </button>
@@ -140,14 +143,17 @@ export default function VerificationRequests() {
       {activeTab === 'history' && (
         <div className="space-y-3">
           {history.length === 0 ? (
-            <p className="text-gray-500 text-sm">No request history yet.</p>
+            <p className="text-sm text-gray-500">No request history yet.</p>
           ) : (
             history.map((req) => (
-              <div key={req.id} className="bg-white border border-gray-200 rounded-lg p-4 flex items-center justify-between">
-                <div>
-                  <p className="font-medium text-gray-800">{req.employer_name}</p>
-                  <p className="text-sm text-gray-500">{req.degree_name}</p>
-                  <p className="text-xs text-gray-400 mt-1">{formatDateTime(req.requested_at)}</p>
+              <div
+                key={req.id}
+                className="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div className="space-y-1">
+                  <p className="font-medium text-gray-900">{req.employer_name}</p>
+                  <p className="text-sm text-gray-600">{req.degree_name}</p>
+                  <p className="text-xs text-gray-400">{formatDateTime(req.requested_at)}</p>
                 </div>
                 {requestStatusBadge(req.status)}
               </div>

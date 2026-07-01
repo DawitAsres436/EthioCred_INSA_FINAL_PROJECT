@@ -33,41 +33,45 @@ export default function Credentials() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">My Credentials</h2>
+      <h2 className="mb-6 text-2xl font-semibold text-gray-900">My Credentials</h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {error}
         </div>
       )}
 
       {credentials.length === 0 ? (
-        <p className="text-gray-500">No credentials found in your wallet.</p>
+        <p className="text-sm text-gray-500">No credentials found in your wallet.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {credentials.map((cred) => (
             <button
               key={cred.id}
               type="button"
               onClick={() => navigate(`/credentials/${cred.id}`)}
-              className="text-left bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:border-blue-400 hover:shadow-md transition-all"
+              className="group text-left rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="font-semibold text-gray-800">{cred.degree_name}</h3>
+              <div className="mb-4 flex items-start justify-between gap-3">
+                <h3 className="text-lg font-semibold leading-snug text-gray-900 group-hover:text-blue-700">
+                  {cred.degree_name}
+                </h3>
                 {statusBadge(cred.status)}
               </div>
-              <dl className="space-y-1 text-sm">
-                <div className="flex justify-between">
-                  <dt className="text-gray-500">Institution</dt>
-                  <dd className="text-gray-800 font-medium">{cred.institution_name}</dd>
+              <dl className="space-y-2.5 text-sm">
+                <div>
+                  <dt className="text-xs font-medium uppercase tracking-wide text-gray-500">Institution</dt>
+                  <dd className="mt-0.5 font-medium text-gray-700">{cred.institution_name}</dd>
                 </div>
-                <div className="flex justify-between">
-                  <dt className="text-gray-500">Major</dt>
-                  <dd className="text-gray-800">{cred.major || '—'}</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-gray-500">Graduation Year</dt>
-                  <dd className="text-gray-800">{cred.graduation_year}</dd>
+                <div className="flex gap-6">
+                  <div>
+                    <dt className="text-xs font-medium uppercase tracking-wide text-gray-500">Major</dt>
+                    <dd className="mt-0.5 text-gray-600">{cred.major || '—'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-medium uppercase tracking-wide text-gray-500">Year</dt>
+                    <dd className="mt-0.5 text-gray-600">{cred.graduation_year}</dd>
+                  </div>
                 </div>
               </dl>
             </button>

@@ -58,36 +58,38 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Dashboard</h2>
+      <h2 className="mb-6 text-2xl font-semibold text-gray-900">Dashboard</h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Total Verifications Run</p>
-          <p className="text-3xl font-bold text-blue-600 mt-1">{stats.total}</p>
+          <p className="mt-1 text-3xl font-bold text-blue-600">{stats.total}</p>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Verified Count</p>
-          <p className="text-3xl font-bold text-green-600 mt-1">{stats.verified}</p>
+          <p className="mt-1 text-3xl font-bold text-indigo-600">{stats.verified}</p>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Failed / Invalid Count</p>
-          <p className="text-3xl font-bold text-red-600 mt-1">{stats.failed}</p>
+          <p className="mt-1 text-3xl font-bold text-gray-700">{stats.failed}</p>
         </div>
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Verifications</h3>
+        <h3 className="mb-4 text-lg font-semibold text-gray-900">Recent Verifications</h3>
         {recentResults.length === 0 ? (
-          <p className="text-gray-500 text-sm">
-            No verifications run yet. Go to Verify Credential to view and verify credentials
-            you&apos;ve been approved to access.
-          </p>
+          <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+            <p className="text-sm text-gray-500">
+              No verifications run yet. Go to Verify Credential to view and verify credentials
+              you&apos;ve been approved to access.
+            </p>
+          </div>
         ) : (
           <Table columns={columns} data={recentResults} />
         )}

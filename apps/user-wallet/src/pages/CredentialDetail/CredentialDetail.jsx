@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import QRCode from 'qrcode';
-import { Download } from 'lucide-react';
+import { ArrowLeft, Download } from 'lucide-react';
 import { get, formatDate } from '@ethiocred/utils';
 import Badge from '../../components/Badge/Badge.jsx';
 import Loader from '../../components/Loader/Loader.jsx';
@@ -58,9 +58,13 @@ export default function CredentialDetail() {
 
   if (error || !credential) {
     return (
-      <div className="text-center py-20">
-        <p className="text-red-600 mb-4">{error || 'Credential not found'}</p>
-        <button type="button" onClick={() => navigate('/credentials')} className="text-blue-600 hover:underline">
+      <div className="py-20 text-center">
+        <p className="mb-4 text-red-600">{error || 'Credential not found'}</p>
+        <button
+          type="button"
+          onClick={() => navigate('/credentials')}
+          className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 focus:outline-none focus:underline"
+        >
           Back to credentials
         </button>
       </div>
@@ -78,42 +82,55 @@ export default function CredentialDetail() {
   ];
 
   return (
-    <div>
+    <div className="mx-auto max-w-4xl">
       <button
         type="button"
         onClick={() => navigate('/credentials')}
-        className="text-sm text-blue-600 hover:underline mb-4"
+        className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 focus:outline-none focus:underline"
       >
-        ← Back to credentials
+        <ArrowLeft size={16} />
+        Back to credentials
       </button>
 
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">Credential Detail</h2>
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-900">Credential Detail</h2>
+          <p className="mt-1 text-sm text-gray-500">{credential.degree_name}</p>
+        </div>
         {statusBadge(credential.status)}
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="mb-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-700">
+            Credential Information
+          </h3>
+        </div>
+        <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-2">
           {fields.map((f) => (
             <div key={f.label}>
-              <p className="text-xs text-gray-500 uppercase tracking-wide">{f.label}</p>
-              <p className="text-gray-800 font-medium mt-0.5">{f.value}</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-gray-500">{f.label}</p>
+              <p className="mt-1 text-sm font-medium text-gray-900">{f.value}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">QR Code</h3>
-        <p className="text-sm text-gray-500 mb-4">
-          Scan this code to verify this credential. Contains credential ID and verification URL.
-        </p>
-        <div className="flex flex-col items-center gap-4">
-          <canvas ref={canvasRef} className="border border-gray-200 rounded-lg" />
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-700">QR Code</h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Scan this code to verify this credential. Contains credential ID and verification URL.
+          </p>
+        </div>
+        <div className="flex flex-col items-center gap-5 p-8">
+          <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-inner">
+            <canvas ref={canvasRef} className="rounded-lg" />
+          </div>
           <button
             type="button"
             onClick={handleDownloadQr}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <Download size={16} />
             Download QR

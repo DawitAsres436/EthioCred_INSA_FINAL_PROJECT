@@ -1,33 +1,31 @@
 const { query } = require('../config/database');
 const authService = require('../services/authService');
 const institutionService = require('../services/institutionService');
+const auditService = require('../services/auditService');
 const { success, error } = require('../utils/apiResponse');
 
 async function getAuditLogs(req, res) {
   const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
-  const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 50, 1), 100);
-  const offset = (page - 1) * limit;
+  const pageSize = Math.min(Math.max(parseInt(req.query.pageSize, 10) || 25, 1), 100);
+  const offset = (page - 1) * pageSize;
 
-  const [logsResult, countResult] = await Promise.all([
-    query(
-      `SELECT al.*, u.full_name AS user_name, u.email AS user_email
-       FROM audit_logs al
-       LEFT JOIN users u ON u.id = al.user_id
-       ORDER BY al.created_at DESC
-       LIMIT $1 OFFSET $2`,
-      [limit, offset]
-    ),
-    query('SELECT COUNT(*)::int AS total FROM audit_logs'),
-  ]);
+  const { action, userId, entityType, startDate, endDate } = req.query;
+
+  const { rows, total } = await auditService.getFilteredLogs({
+    action: action || null,
+    userId: userId || null,
+    entityType: entityType || null,
+    startDate: startDate || null,
+    endDate: endDate || null,
+    limit: pageSize,
+    offset,
+  });
 
   return success(res, {
-    logs: logsResult.rows,
-    pagination: {
-      page,
-      limit,
-      total: countResult.rows[0].total,
-      totalPages: Math.ceil(countResult.rows[0].total / limit),
-    },
+    logs: rows,
+    total,
+    page,
+    pageSize,
   }, 'Audit logs retrieved successfully');
 }
 

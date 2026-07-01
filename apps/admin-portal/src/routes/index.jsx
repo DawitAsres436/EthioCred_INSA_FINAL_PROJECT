@@ -10,6 +10,7 @@ import Dashboard from '../pages/Dashboard/Dashboard.jsx';
 import Institutions from '../pages/Institutions/Institutions.jsx';
 import CreateAdmin from '../pages/CreateAdmin/CreateAdmin.jsx';
 import SecurityDemo from '../pages/SecurityDemo/SecurityDemo.jsx';
+import AuditLogs from '../pages/AuditLogs/AuditLogs.jsx';
 
 function RootRedirect() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -47,6 +48,7 @@ export default function AppRoutes() {
       >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/institutions" element={<Institutions />} />
+        <Route path="/audit-logs" element={<AuditLogs />} />
         <Route path="/create-admin" element={<CreateAdmin />} />
         <Route path="/security-demo" element={<SecurityDemo />} />
       </Route>

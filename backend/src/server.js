@@ -8,7 +8,7 @@ async function start() {
   try {
     await query('SELECT 1');
   } catch (err) {
-    console.error('Failed to connect to PostgreSQL:', err.message);
+    console.error('Failed to connect to PostgreSQL:', err);
     process.exit(1);
   }
 

@@ -37,30 +37,36 @@ export default function RequestStatus() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Request Status</h2>
+      <h2 className="mb-2 text-2xl font-semibold text-gray-900">Request Status</h2>
+      <p className="mb-6 text-sm text-gray-500">Track the status of your verification requests.</p>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg">
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {error}
         </div>
       )}
 
       {requests.length === 0 ? (
-        <p className="text-gray-500">No verification requests yet.</p>
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <p className="text-sm text-gray-500">No verification requests yet.</p>
+        </div>
       ) : (
         <div className="space-y-4">
           {requests.map((req) => (
-            <div key={req.id} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <p className="font-semibold text-gray-800">{req.degree_name}</p>
-                  <p className="text-sm text-gray-500">Serial: {req.serial_number}</p>
-                  <p className="text-xs text-gray-400 mt-2">
+            <div
+              key={req.id}
+              className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+            >
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1">
+                  <p className="text-base font-semibold text-gray-900">{req.degree_name}</p>
+                  <p className="text-sm text-gray-600">Serial: {req.serial_number}</p>
+                  <p className="text-xs text-gray-400">
                     Requested: {formatDateTime(req.requested_at)}
                     {req.responded_at && ` · Responded: ${formatDateTime(req.responded_at)}`}
                   </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex shrink-0 items-center gap-3">
                   {statusBadge(req.status)}
                   {req.status === 'APPROVED' && (
                     <button
@@ -70,7 +76,7 @@ export default function RequestStatus() {
                           state: { credentialId: req.credential_id, serial: req.serial_number },
                         })
                       }
-                      className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 font-medium"
+                      className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       Verify Now
                     </button>
